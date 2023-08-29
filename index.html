@@ -1,0 +1,105 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="script.js"></script>
+    <script type="module" src="main.js"></script>
+    <script type="text/javascript">
+      const changeImg = () => {
+        const galleryImg = document.querySelector('.galleryImg');
+        console.log('galleryImg classList', galleryImg.classList);
+        galleryImg.classList.remove('move');
+        document.startViewTransition(() => {
+          if (
+            galleryImg.src.includes(
+              'https://cdn.mos.cms.futurecdn.net/Vp9WvV7YKdH4k8sKRePcE8.jpg'
+            )
+          ) {
+            galleryImg.src =
+              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtPlDI9Kn4wV_0A5hOI7khBhQZfm-VTxFzaft1GD3_oQ&s';
+          } else {
+            galleryImg.src =
+              'https://cdn.mos.cms.futurecdn.net/Vp9WvV7YKdH4k8sKRePcE8.jpg';
+          }
+        });
+      };
+      const moveImg = async () => {
+        const galleryImg = document.querySelector('.galleryImg');
+        galleryImg.classList.add('move');
+
+        const transition = document.startViewTransition(() => {
+          if (galleryImg.style.marginLeft.startsWith('0')) {
+            galleryImg.style.marginLeft = '20px';
+            galleryImg.style.marginTop = '100px';
+          } else {
+            galleryImg.style.marginLeft = '0px';
+            galleryImg.style.marginTop = '0px';
+          }
+        });
+        console.log(transition.ready);
+        await transition.ready;
+        console.log('animte the new view.');
+        // galleryImg.classList.remove('move');
+      };
+    </script>
+  </head>
+  <body>
+    <h1>Hello World</h1>
+
+    <img
+      class="galleryImg"
+      widht="100px"
+      height="200px"
+      src="https://cdn.mos.cms.futurecdn.net/Vp9WvV7YKdH4k8sKRePcE8.jpg"
+    />
+    <br />
+
+    <button onclick="changeImg()">change img</button>
+    <button onclick="moveImg()">move img</button>
+    <a href="./2.html">Go to 2</a>
+
+    <style>
+      .galleryImg {
+        aspect-ratio: 16/9;
+        view-transition-name: cool-anim;
+      }
+      .galleryImg.move {
+        view-transition-name: move-anim;
+      }
+
+      ::view-transition-old(cool-anim) {
+        animation: slideDown 0.5s ease-in-out;
+      }
+      ::view-transition-new(cool-anim) {
+        animation: scaleIn 0.5s ease-in-out;
+      }
+      ::view-transition-image-pair(move-anim) {
+        isolation: auto;
+      }
+      ::view-transition-old(move-anim),
+      ::view-transition-new(move-anim) {
+        animation: none;
+        mix-blend-mode: normal;
+      }
+
+      @keyframes slideDown {
+        from {
+          transform: translateY(0%);
+          opacity: 1;
+        }
+        to {
+          transform: translateY(100%);
+          opacity: 0;
+        }
+      }
+
+      @keyframes scaleIn {
+        from {
+          transform: scale(0);
+        }
+        to {
+          transform: scale(1);
+        }
+      }
+    </style>
+  </body>
+</html>
